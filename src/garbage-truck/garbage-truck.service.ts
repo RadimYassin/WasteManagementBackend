@@ -12,7 +12,14 @@ export class GarbageTruckService {
   }
 
   findAll() {
-    return this.database.garbageTruck.findMany({})
+    return this.database.garbageTruck.findMany({
+
+      include:{
+        collections:true,
+        driver:true,
+        PickupRoute:true
+      }
+    })
   }
 
   findOne(id: string) {

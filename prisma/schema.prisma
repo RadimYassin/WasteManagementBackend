@@ -14,7 +14,8 @@ enum Role {
 }
 
 model User {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  // id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
   username     String
   password     String
   email        String  @unique
@@ -53,16 +54,19 @@ model Bin {
   currentFillLevel Int
   binType        String
   isDamaged      Boolean @default(false)
-  collection    Collection  @relation(fields: [collectionId], references: [id])
-  collectionId String @db.ObjectId
 
-  route   PickupRoute   @relation(fields: [routeId], references: [id])
-  routeId String @db.ObjectId
+  collection    Collection?  @relation(fields: [collectionId], references: [id])
+  collectionId String? @db.ObjectId 
+
+  route   PickupRoute?  @relation(fields: [routeId], references: [id]) 
+  routeId String? @db.ObjectId 
+
   sensors        Sensor[]
   reports        Report[]
 
   @@map("bins")
 }
+
 
 model Zone {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId

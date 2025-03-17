@@ -13,7 +13,11 @@ export class SensorService {
   }
 
   findAll() {
-    return this.database.sensor.findMany({})
+    return this.database.sensor.findMany({
+      include:{
+        bin:true
+      }
+    })
   }
 
   findOne(id: string) {

@@ -13,7 +13,13 @@ export class PickupRouteService {
   }
 
   findAll() {
-    return this.database.pickupRoute.findMany({})
+    return this.database.pickupRoute.findMany({
+      include:{
+        bins:true,
+        assignedDriver:true,
+        assignedTruck:true
+      }
+    })
   }
 
   findOne(id: string) {
