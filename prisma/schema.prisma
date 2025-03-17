@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  DRIVER
+  NORMAL_USER
+}
+
+model User {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  username     String
+  password     String
+  email        String  @unique
+  role         Role
+  isActive     Boolean @default(false)
+ verificationToken String?
+  address        String? // For Normal User
+  phoneNumber    String? // For Normal User
+  hasPendingReports Boolean? @default(false) // For Normal User
+
+  licenseNumber String? // For Driver
+  isAvailable   Boolean? @default(true) // For Driver
+
+  managedBins    String[] @default([])
+
+  createdAt    DateTime @default(now())
+
+  Zone Zone?
+  Collection Collection[] 
+  Report Report[]  
+  PickupRoute PickupRoute[]
+  GarbageTruck GarbageTruck[]
+    @@map("users")
+
+}
+
+
+
+model Bin {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  currentLat     Float
+  currentLng     Float
+  status         String
+  lastCollected  DateTime?
+  capacity       Int
+  currentFillLevel Int
+  binType        String
+  isDamaged      Boolean @default(false)
+  collection    Collection  @relation(fields: [collectionId], references: [id])
+  collectionId String @db.ObjectId
+
+  route   PickupRoute   @relation(fields: [routeId], references: [id])
+  routeId String @db.ObjectId
+  sensors        Sensor[]
+  reports        Report[]
+
+  @@map("bins")
+}
+
+model Zone {
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  currentLat     Float
+  currentLng     Float
+  assignedAdminId   String @db.ObjectId @unique 
+  totalBins         Int
+  isActive          Boolean @default(true)
+
+  assignedAdmin     User @relation(fields: [assignedAdminId], references: [id])
+
+  @@map("zones")
+}
+
+model Sensor {
+  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  type             String
+  status           String
+  reading          Float
+  lastMaintenance  DateTime?
+
+  binId            String @db.ObjectId
+  bin             Bin @relation(fields: [binId], references: [id])
+
+  @@map("sensors")
+}
+
+model Collection {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  timestamp       DateTime @default(now())
+  status         String
+  assignedTruckId String @db.ObjectId
+  assignedDriverId String @db.ObjectId
+  collectionMethod String
+
+  truck           GarbageTruck @relation(fields: [assignedTruckId], references: [id])
+  driver         User @relation(fields: [assignedDriverId], references: [id])
+
+  @@map("collections")
+  Bin Bin[]
+}
+
+enum IssueType {
+  DAMAGED_BIN
+  OVERFLOWING_BIN
+  MISSING_BIN
+  SENSOR_FAILURE
+  OTHER
+}
+
+
+model Report {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  issueType      IssueType
+  image         String?
+  description    String
+  assignedAdminId String? @db.ObjectId
+  isResolved    Boolean @default(false)
+  timestamp     DateTime @default(now())
+
+  binId         String @db.ObjectId
+  bin          Bin @relation(fields: [binId], references: [id])
+
+  userId       String @db.ObjectId
+  user         User @relation(fields: [userId], references: [id])
+
+  @@map("reports")
+}
+
+model PickupRoute {
+  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  assignedTruckId  String @db.ObjectId
+  assignedDriverId String @db.ObjectId
+  estimatedDuration Int
+  routeName       String
+
+  bins            Bin[] 
+  assignedTruck  GarbageTruck @relation(fields: [assignedTruckId], references: [id])
+  assignedDriver User @relation(fields: [assignedDriverId], references: [id])
+
+  @@map("pickup_routes")
+}
+
+model GarbageTruck {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  licenseNumber  String
+  vehicleId      String
+  isAvailable    Boolean @default(true)
+  currentLat     Float
+  currentLng     Float
+  speed         Float
+  status        String
+  lastUpdated   DateTime @default(now())
+
+  driverId      String @db.ObjectId
+  driver       User @relation(fields: [driverId], references: [id])
+
+  collections   Collection[]
+
+  @@map("garbage_trucks")
+  PickupRoute PickupRoute[]
+}

@@ -49,7 +49,7 @@ To use this API, ensure that you have installed the necessary dependencies:
 
 2. Set up the Prisma database models and migrate:
     ```bash
-    npx prisma migrate dev
+    npx prisma db push
     ```
 
 3. Start the application:
