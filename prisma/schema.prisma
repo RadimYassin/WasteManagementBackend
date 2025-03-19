@@ -20,7 +20,7 @@ model User {
   email           String  @unique
   role            Role
   isActive        Boolean @default(false)
-  verificationToken String?
+  verificationCode String?
   address         String? // For Normal User
   phoneNumber     String? // For Normal User
   hasPendingReports Boolean? @default(false) // For Normal User

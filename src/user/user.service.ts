@@ -37,7 +37,7 @@ export class UserService {
   }
 
   async findOne(id: string) {
- const user=  await this.dataBase.user.findUnique({
+  const user=  await this.dataBase.user.findUnique({
       where:{
         id:id
       }
