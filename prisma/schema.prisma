@@ -14,33 +14,36 @@ enum Role {
 }
 
 model User {
-  // id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  username     String
-  password     String
-  email        String  @unique
-  role         Role
-  isActive     Boolean @default(false)
- verificationToken String?
-  address        String? // For Normal User
-  phoneNumber    String? // For Normal User
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  username        String
+  password        String
+  email           String  @unique
+  role            Role
+  isActive        Boolean @default(false)
+  verificationToken String?
+  address         String? // For Normal User
+  phoneNumber     String? // For Normal User
   hasPendingReports Boolean? @default(false) // For Normal User
 
-  licenseNumber String? // For Driver
-  isAvailable   Boolean? @default(true) // For Driver
+  licenseNumber   String? // For Driver
+  isAvailable     Boolean? @default(true) // For Driver
 
-  managedBins    String[] @default([])
+  managedBins     String[] @default([])
 
-  createdAt    DateTime @default(now())
+  createdAt       DateTime @default(now())
 
-  Zone Zone?
-  Collection Collection[] 
-  Report Report[]  
-  PickupRoute PickupRoute[]
-  GarbageTruck GarbageTruck[]
-    @@map("users")
+  Zone            Zone?
+  Collection      Collection[] 
+  Report          Report[]  
+  PickupRoute     PickupRoute[]
+  GarbageTruck    GarbageTruck[]
 
+  sentMessages    Message[] @relation(name: "SenderRelation")
+  receivedMessages Message[] @relation(name: "ReceiverRelation")
+
+  @@map("users")
 }
+
 
 
 
@@ -169,4 +172,17 @@ model GarbageTruck {
 
   @@map("garbage_trucks")
   PickupRoute PickupRoute[]
+}
+model Message {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  senderId    String  @db.ObjectId
+  receiverId  String  @db.ObjectId
+  content     String
+  timestamp   DateTime @default(now())
+  isRead      Boolean @default(false)
+
+  sender   User @relation(fields: [senderId], references: [id], name: "SenderRelation")
+  receiver User @relation(fields: [receiverId], references: [id], name: "ReceiverRelation")
+
+  @@map("messages")
 }

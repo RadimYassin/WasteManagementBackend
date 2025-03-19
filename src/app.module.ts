@@ -12,9 +12,10 @@ import { CollectionModule } from './collection/collection.module';
 import { SensorModule } from './sensor/sensor.module';
 import { BinModule } from './bin/bin.module';
 import { AuthModule } from './auth/auth.module';
+import { MessageModule } from './message/message.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, ZonesModule, ReportModule, PickupRouteModule, GarbageTruckModule, CollectionModule, SensorModule, BinModule, AuthModule],
+  imports: [PrismaModule, UserModule, ZonesModule, ReportModule, PickupRouteModule, GarbageTruckModule, CollectionModule, SensorModule, BinModule, AuthModule, MessageModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

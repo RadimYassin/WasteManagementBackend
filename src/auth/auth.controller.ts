@@ -19,6 +19,9 @@ export class AuthController {
     return this.authService.verifyAccount(token);
   }
 
+
+  
+
   @Post('login')
   async login(@Body() dto: { email: string; password: string }) {
     return this.authService.login(dto);
