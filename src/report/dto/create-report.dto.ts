@@ -12,6 +12,7 @@ export enum IssueType {
 
 // Report DTO
 export class CreateReportDto {
+
   @IsEnum(IssueType, { message: 'Invalid issue type' })
   issueType: IssueType;
 
@@ -24,6 +25,7 @@ export class CreateReportDto {
   @IsOptional()
   @IsMongoId({ message: 'Invalid admin ID' })
   assignedAdminId?: string;
+  @IsOptional()
 
   @IsBoolean({ message: 'isResolved must be a boolean' })
   isResolved: boolean;

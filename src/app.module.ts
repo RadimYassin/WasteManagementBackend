@@ -13,9 +13,20 @@ import { SensorModule } from './sensor/sensor.module';
 import { BinModule } from './bin/bin.module';
 import { AuthModule } from './auth/auth.module';
 import { MessageModule } from './message/message.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
-  imports: [PrismaModule, UserModule, ZonesModule, ReportModule, PickupRouteModule, GarbageTruckModule, CollectionModule, SensorModule, BinModule, AuthModule, MessageModule],
+  imports: [
+    
+    PrismaModule, UserModule, ZonesModule, ReportModule, PickupRouteModule, GarbageTruckModule, CollectionModule, SensorModule, BinModule, AuthModule, MessageModule,
+
+  ServeStaticModule.forRoot({
+    rootPath: join(__dirname, '..', 'uploads'), // Serve files from "uploads" directory
+      serveRoot: '/uploads', 
+  })
+  
+  ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
