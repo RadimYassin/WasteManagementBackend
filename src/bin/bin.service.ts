@@ -40,4 +40,20 @@ export class BinService {
       }
     });
   }
+
+
+
+  async findFullBin() {
+    const bins = await this.database.bin.findMany({
+      where: {
+        status: "FULL", 
+      },
+      select:{
+        currentLat:true,
+        currentLng:true
+      }
+    });
+  
+    return bins; 
+  }
 }

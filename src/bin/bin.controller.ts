@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { BinService } from './bin.service';
 import { CreateBinDto } from './dto/create-bin.dto';
 import { UpdateBinDto } from './dto/update-bin.dto';
@@ -8,6 +8,8 @@ export class BinController {
   constructor(private readonly binService: BinService) {}
 
   @Post()
+    @UsePipes(new ValidationPipe({ transform: true })) 
+  
   create(@Body() createBinDto: CreateBinDto) {
     return this.binService.create(createBinDto);
   }
@@ -15,6 +17,11 @@ export class BinController {
   @Get()
   findAll() {
     return this.binService.findAll();
+  }
+
+  @Get('FullBins')
+  findFullBin() {
+    return this.binService.findFullBin();
   }
 
   @Get(':id')
@@ -31,4 +38,6 @@ export class BinController {
   remove(@Param('id') id: string) {
     return this.binService.remove(id);
   }
+
+
 }
