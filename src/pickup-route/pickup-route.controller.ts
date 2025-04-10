@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { PickupRouteService } from './pickup-route.service';
 import { CreatePickupRouteDto } from './dto/create-pickup-route.dto';
 import { UpdatePickupRouteDto } from './dto/update-pickup-route.dto';
@@ -8,6 +8,8 @@ export class PickupRouteController {
   constructor(private readonly pickupRouteService: PickupRouteService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe({ transform: true })) 
+
   create(@Body() createPickupRouteDto: CreatePickupRouteDto) {
     return this.pickupRouteService.create(createPickupRouteDto);
   }

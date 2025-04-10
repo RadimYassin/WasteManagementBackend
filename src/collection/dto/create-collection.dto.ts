@@ -38,5 +38,8 @@ import {
   
     @IsEnum(CollectionMethod, { message: 'Invalid collection method' })
     collectionMethod: CollectionMethod;
+
+    @IsMongoId({ message: 'Invalid bin ID' })
+    binId: string;
   }
   

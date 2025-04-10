@@ -40,9 +40,7 @@ import {
     @IsEnum(GarbageTruckStatus, { message: 'Invalid status' })
     status: GarbageTruckStatus;
   
-    @Type(() => Date)
-    @IsDate({ message: 'Invalid last updated date' })
-    lastUpdated: Date;
+  
   
     @IsMongoId({ message: 'Invalid driver ID' })
     driverId: string;

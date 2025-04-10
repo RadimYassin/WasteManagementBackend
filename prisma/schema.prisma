@@ -35,6 +35,7 @@ model User {
   Zone            Zone?
   Collection      Collection[] 
   Report          Report[]  
+  assignedReports Report[] @relation("AdminReports")
   PickupRoute     PickupRoute[]
   GarbageTruck    GarbageTruck[]
 
@@ -58,8 +59,12 @@ model Bin {
   binType        String
   isDamaged      Boolean @default(false)
 
-  collection    Collection?  @relation(fields: [collectionId], references: [id])
-  collectionId String? @db.ObjectId 
+  // Remove the collection relation field
+  // collection    Collection?  @relation(fields: [collectionId], references: [id])
+  // collectionId String? @db.ObjectId 
+  
+  // Add collections field for one-to-many relationship
+  collections    Collection[]
 
   route   PickupRoute?  @relation(fields: [routeId], references: [id]) 
   routeId String? @db.ObjectId 
@@ -106,11 +111,15 @@ model Collection {
   assignedDriverId String @db.ObjectId
   collectionMethod String
 
+  // Add bin relation field
+  binId          String @db.ObjectId
+  bin            Bin @relation(fields: [binId], references: [id])
+
   truck           GarbageTruck @relation(fields: [assignedTruckId], references: [id])
   driver         User @relation(fields: [assignedDriverId], references: [id])
 
   @@map("collections")
-  Bin Bin[]
+
 }
 
 enum IssueType {
@@ -136,6 +145,8 @@ model Report {
 
   userId       String @db.ObjectId
   user         User @relation(fields: [userId], references: [id])
+  
+  assignedAdmin User? @relation("AdminReports", fields: [assignedAdminId], references: [id])
 
   @@map("reports")
 }

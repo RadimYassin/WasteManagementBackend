@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { SensorService } from './sensor.service';
 import { CreateSensorDto } from './dto/create-sensor.dto';
 import { UpdateSensorDto } from './dto/update-sensor.dto';
@@ -8,6 +8,8 @@ export class SensorController {
   constructor(private readonly sensorService: SensorService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe({ transform: true })) 
+
   create(@Body() createSensorDto: CreateSensorDto) {
     return this.sensorService.create(createSensorDto);
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UsePipes } from '@nestjs/common';
 import { GarbageTruckService } from './garbage-truck.service';
 import { CreateGarbageTruckDto } from './dto/create-garbage-truck.dto';
 import { UpdateGarbageTruckDto } from './dto/update-garbage-truck.dto';
@@ -8,6 +8,8 @@ export class GarbageTruckController {
   constructor(private readonly garbageTruckService: GarbageTruckService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe({ transform: true })) 
+
   create(@Body() createGarbageTruckDto: CreateGarbageTruckDto) {
     return this.garbageTruckService.create(createGarbageTruckDto);
   }

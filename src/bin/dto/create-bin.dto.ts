@@ -56,8 +56,10 @@ export class CreateBinDto {
   @IsBoolean({ message: 'isDamaged must be a boolean' })
   isDamaged: boolean;
 
+  @IsOptional()
   @IsMongoId({ message: 'Invalid collection ID' })
-  collectionId: string;
+  collectionId?: string;
+  @IsOptional()
 
   @IsMongoId({ message: 'Invalid route ID' })
   routeId: string;
